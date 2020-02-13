@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group 'ru.romangr'
+version '0.1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'jacoco'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+test {
+  useJUnitPlatform()
+}
+
+dependencies {
+  compileOnly('com.google.code.findbugs:jsr305:3.0.2')
+
+  testImplementation('org.assertj:assertj-core:3.10.0')
+  testImplementation('org.junit.jupiter:junit-jupiter:5.4.1')
+  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+}
