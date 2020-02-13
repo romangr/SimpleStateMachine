@@ -89,5 +89,10 @@ public class StateMachineBuilder<S extends Enum<S>, E extends Enum<E>> implement
     public int hashCode() {
       return Objects.hash(fromState, toState, event);
     }
+
+    @Override
+    public String toString() {
+      return "{ " + fromState + " ---" + event + "--> " + toState + " }";
+    }
   }
 }
