@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nullable;
 import ru.romangr.simplestatemachine.nullability.NonNullApi;
@@ -65,13 +64,12 @@ public class StateMachineBuilder<S extends Enum<S>, E extends Enum<E>> implement
 
   @Override
   public Map<S, Map<E, Transition<S, E>>> asTransitionsMap() {
-    return collectTransitionsMap();
+    return Collections.unmodifiableMap(collectTransitionsMap());
   }
 
   private Map<S, Map<E, Transition<S, E>>> collectTransitionsMap() {
-    Map<S, Map<E, Transition<S, E>>> map = transitions.stream()
+    return transitions.stream()
         .collect(toMap(t -> t.fromState, this::collectTransitionsMap, this::mergeTransitionMaps));
-    return Collections.unmodifiableMap(map);
   }
 
   private Map<E, Transition<S, E>> collectTransitionsMap(Transition<S, E> transition) {

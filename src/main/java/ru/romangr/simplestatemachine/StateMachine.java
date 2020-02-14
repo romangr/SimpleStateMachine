@@ -12,9 +12,7 @@ public class StateMachine<S extends Enum<S>, E extends Enum<E>> {
   private S currentState;
 
   public StateMachine(S initialState, Map<S, Map<E, Transition<S, E>>> transitionsByState) {
-    this.currentState = initialState;
-    this.initialState = initialState;
-    this.transitionsByState = Collections.unmodifiableMap(transitionsByState);
+    this(initialState, initialState, transitionsByState);
   }
 
   public StateMachine(S initialState, S currentState, Map<S, Map<E, Transition<S, E>>> transitionsByState) {

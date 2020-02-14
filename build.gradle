@@ -1,5 +1,6 @@
 plugins {
-    id 'java'
+  id 'java'
+  id 'info.solidsoft.pitest' version '1.4.6'
 }
 
 group 'ru.romangr'
@@ -11,16 +12,31 @@ apply plugin: 'jacoco'
 sourceCompatibility = 1.8
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 test {
   useJUnitPlatform()
 }
 
+pitest {
+  pitestVersion = '1.4.3'
+  mainSourceSets = [sourceSets.main]
+  testSourceSets = [sourceSets.test]
+  threads = 4
+  outputFormats = ['HTML']
+  timestampedReports = false
+  testPlugin = 'junit5'
+  mutators = ['ALL']
+  mutationThreshold = 85
+  coverageThreshold = 95
+}
+
+
 dependencies {
   compileOnly('com.google.code.findbugs:jsr305:3.0.2')
 
+  testImplementation('org.pitest:pitest-junit5-plugin:0.8')
   testImplementation('org.assertj:assertj-core:3.10.0')
   testImplementation('org.junit.jupiter:junit-jupiter:5.4.1')
   testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
