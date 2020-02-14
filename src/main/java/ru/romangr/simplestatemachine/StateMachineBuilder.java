@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 import ru.romangr.simplestatemachine.nullability.NonNullApi;
 
 @NonNullApi
-public class StateMachineBuilder<S extends Enum<S>, E extends Enum<E>> implements
+public final class StateMachineBuilder<S extends Enum<S>, E extends Enum<E>> implements
     StatesAwareBuilder<S, E>, EventsAwareBuilder<S, E>, TransitionsBuilder<S, E>,
     InitialStateAwareBuilder<S, E> {
 

@@ -2,7 +2,7 @@ package ru.romangr.simplestatemachine;
 
 import java.util.Objects;
 
-public class Transition<S extends Enum<S>, E extends Enum<E>> {
+public final class Transition<S extends Enum<S>, E extends Enum<E>> {
 
   public final S fromState;
   public final S toState;

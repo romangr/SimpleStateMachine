@@ -21,7 +21,7 @@ public class StateMachine<S extends Enum<S>, E extends Enum<E>> {
     this.transitionsByState = Collections.unmodifiableMap(transitionsByState);
   }
 
-  public EventAcceptResult<S> acceptEvent(E event) {
+  public final EventAcceptResult<S> acceptEvent(E event) {
     Map<E, Transition<S, E>> transitionsByEvent = transitionsByState.get(currentState);
     if (transitionsByEvent == null) {
       return acceptResultForUnexpectedEvent();
@@ -34,11 +34,11 @@ public class StateMachine<S extends Enum<S>, E extends Enum<E>> {
     return new EventAcceptResult<>(currentState, EventAcceptStatus.SUCCESS);
   }
 
-  public S currentState() {
+  public final S currentState() {
     return currentState;
   }
 
-  public void reset() {
+  public final void reset() {
     this.currentState = initialState;
   }
 
