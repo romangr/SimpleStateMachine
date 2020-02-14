@@ -57,6 +57,20 @@ class StateMachineTest {
   }
 
   @Test
+  void oneStateTransition() {
+    StateMachine<ThreeStates, TwoEvents> stateMachine = StateMachine.<ThreeStates, TwoEvents>builder()
+        .withStates(ThreeStates.class)
+        .withEvents(TwoEvents.class)
+        .withInitialState(ThreeStates.ONE)
+        .withTransition(ThreeStates.ONE, ThreeStates.ONE, TwoEvents.UP)
+        .build();
+
+    EventAcceptResult<ThreeStates> result1 = stateMachine.acceptEvent(TwoEvents.UP);
+    assertThat(result1.newState()).isEqualTo(ThreeStates.ONE);
+    assertThat(result1.result()).isEqualTo(EventAcceptStatus.SUCCESS);
+  }
+
+  @Test
   void reset() {
     StateMachine<ThreeStates, TwoEvents> stateMachine = StateMachine.<ThreeStates, TwoEvents>builder()
         .withStates(ThreeStates.class)
