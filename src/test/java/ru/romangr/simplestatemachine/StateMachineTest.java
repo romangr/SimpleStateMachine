@@ -2,6 +2,7 @@ package ru.romangr.simplestatemachine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class StateMachineTest {
@@ -56,6 +57,27 @@ class StateMachineTest {
   }
 
   @Test
+  void reset() {
+    StateMachine<ThreeStates, TwoEvents> stateMachine = StateMachine.<ThreeStates, TwoEvents>builder()
+        .withStates(ThreeStates.class)
+        .withEvents(TwoEvents.class)
+        .withInitialState(ThreeStates.ONE)
+        .withTransition(ThreeStates.ONE, ThreeStates.TWO, TwoEvents.UP)
+        .withTransition(ThreeStates.TWO, ThreeStates.ONE, TwoEvents.DOWN)
+        .withTransition(ThreeStates.TWO, ThreeStates.THREE, TwoEvents.UP)
+        .withTransition(ThreeStates.THREE, ThreeStates.TWO, TwoEvents.DOWN)
+        .build();
+
+    EventAcceptResult<ThreeStates> result1 = stateMachine.acceptEvent(TwoEvents.UP);
+    assertThat(result1.newState()).isEqualTo(ThreeStates.TWO);
+    assertThat(result1.result()).isEqualTo(EventAcceptStatus.SUCCESS);
+
+    stateMachine.reset();
+
+    assertThat(stateMachine.currentState()).isEqualTo(ThreeStates.ONE);
+  }
+
+  @Test
   void circularTransitions() {
     StateMachine<ThreeStates, TwoEvents> stateMachine = StateMachine.<ThreeStates, TwoEvents>builder()
         .withStates(ThreeStates.class)
@@ -96,14 +118,38 @@ class StateMachineTest {
     assertThat(result1.result()).isEqualTo(EventAcceptStatus.UNEXPECTED_EVENT);
   }
 
-  enum ThreeStates {
-    ONE,
-    TWO,
-    THREE
+  @Test
+  void stateWithNoTransitionsFrom() {
+    StateMachine<ThreeStates, TwoEvents> stateMachine = StateMachine.<ThreeStates, TwoEvents>builder()
+        .withStates(ThreeStates.class)
+        .withEvents(TwoEvents.class)
+        .withInitialState(ThreeStates.ONE)
+        .withTransition(ThreeStates.TWO, ThreeStates.THREE, TwoEvents.UP)
+        .withTransition(ThreeStates.THREE, ThreeStates.ONE, TwoEvents.DOWN)
+        .build();
+
+    EventAcceptResult<ThreeStates> result1 = stateMachine.acceptEvent(TwoEvents.UP);
+    assertThat(result1.newState()).isEqualTo(ThreeStates.ONE);
+    assertThat(result1.result()).isEqualTo(EventAcceptStatus.UNEXPECTED_EVENT);
   }
 
-  enum TwoEvents{
-    UP,
-    DOWN
+  @Test
+  void restoreFromMapWithCurrentStateNotEqualToInitialState() {
+    Map<ThreeStates, Map<TwoEvents, Transition<ThreeStates, TwoEvents>>> transitionsMap =
+        StateMachine.<ThreeStates, TwoEvents>builder()
+            .withStates(ThreeStates.class)
+            .withEvents(TwoEvents.class)
+            .withInitialState(ThreeStates.ONE)
+            .withTransition(ThreeStates.ONE, ThreeStates.TWO, TwoEvents.UP)
+            .withTransition(ThreeStates.TWO, ThreeStates.ONE, TwoEvents.DOWN)
+            .withTransition(ThreeStates.TWO, ThreeStates.THREE, TwoEvents.UP)
+            .withTransition(ThreeStates.THREE, ThreeStates.TWO, TwoEvents.DOWN)
+            .asTransitionsMap();
+
+    StateMachine<ThreeStates, TwoEvents> stateMachine = new StateMachine<>(
+        ThreeStates.ONE, ThreeStates.TWO, transitionsMap);
+
+    assertThat(stateMachine.currentState()).isEqualTo(ThreeStates.TWO);
   }
+
 }

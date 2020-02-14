@@ -3,8 +3,6 @@ package ru.romangr.simplestatemachine;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
-import ru.romangr.simplestatemachine.StateMachineTest.TwoEvents;
-import ru.romangr.simplestatemachine.StateMachineTest.ThreeStates;
 
 class StateMachineBuilderTest {
 

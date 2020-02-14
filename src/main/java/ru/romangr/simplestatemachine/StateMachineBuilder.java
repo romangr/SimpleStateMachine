@@ -1,9 +1,12 @@
 package ru.romangr.simplestatemachine;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toMap;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -57,42 +60,36 @@ public class StateMachineBuilder<S extends Enum<S>, E extends Enum<E>> implement
     requireNonNull(states);
     requireNonNull(events);
     requireNonNull(initialState);
-    return new StateMachine<>(states, events, initialState, new ArrayList<>(transitions));
+    return new StateMachine<>(initialState, collectTransitionsMap());
   }
 
-  static class Transition<S, E> {
-    public final S fromState;
-    public final S toState;
-    public final E event;
-
-    private Transition(S fromState, S toState, E event) {
-      this.fromState = fromState;
-      this.toState = toState;
-      this.event = event;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-      Transition<?, ?> that = (Transition<?, ?>) o;
-      return fromState.equals(that.fromState) &&
-          toState.equals(that.toState) &&
-          event.equals(that.event);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(fromState, toState, event);
-    }
-
-    @Override
-    public String toString() {
-      return "{ " + fromState + " ---" + event + "--> " + toState + " }";
-    }
+  @Override
+  public Map<S, Map<E, Transition<S, E>>> asTransitionsMap() {
+    return collectTransitionsMap();
   }
+
+  private Map<S, Map<E, Transition<S, E>>> collectTransitionsMap() {
+    Map<S, Map<E, Transition<S, E>>> map = transitions.stream()
+        .collect(toMap(t -> t.fromState, this::collectTransitionsMap, this::mergeTransitionMaps));
+    return Collections.unmodifiableMap(map);
+  }
+
+  private Map<E, Transition<S, E>> collectTransitionsMap(Transition<S, E> transition) {
+    Map<E, Transition<S, E>> map = new HashMap<>();
+    map.put(transition.event, transition);
+    return map;
+  }
+
+  private Map<E, Transition<S, E>> mergeTransitionMaps(Map<E, Transition<S, E>> map1,
+      Map<E, Transition<S, E>> map2) {
+    map2.forEach((k, v) -> {
+      Transition<S, E> previousValue = map1.put(k, v);
+      if (previousValue != null) {
+        throw new IllegalStateException(
+            "Ambiguous transitions: '" + v + "' and '" + previousValue + "'");
+      }
+    });
+    return map1;
+  }
+
 }
