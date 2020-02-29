@@ -1,0 +1,111 @@
+plugins {
+  id 'java'
+  id 'java-library'
+  id 'info.solidsoft.pitest' version '1.4.6'
+  id 'maven-publish'
+  id 'signing'
+  id "com.jfrog.bintray" version '1.8.4'
+}
+
+ext {
+  currentVersion = '0.0.1'
+}
+
+group 'ru.romangr'
+version currentVersion
+
+apply plugin: 'java'
+apply plugin: 'jacoco'
+
+sourceCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
+
+test {
+  useJUnitPlatform()
+}
+
+pitest {
+  pitestVersion = '1.4.3'
+  mainSourceSets = [sourceSets.main]
+  testSourceSets = [sourceSets.test]
+  threads = 4
+  outputFormats = ['HTML']
+  timestampedReports = false
+  testPlugin = 'junit5'
+  mutators = ['ALL']
+  mutationThreshold = 85
+  coverageThreshold = 95
+}
+
+publishing {
+  publications {
+    maven(MavenPublication) {
+      artifactId 'simple-state-machine'
+      pom {
+        name = "${group}:${artifactId}"
+        description = 'SimpleStateMachine is a small util to build small state machines in Java'
+        url = 'https://github.com/romangr/SimpleStateMachine'
+
+        licenses {
+          license {
+            name = 'MIT License'
+            url = 'https://github.com/romangr/SimpleStateMachine/blob/master/LICENSE'
+          }
+        }
+
+        developers {
+          developer {
+            id = 'romangr'
+            name = 'Roman Golovin'
+            email = 'roman_gr@mail.com'
+            url = 'https://github.com/romangr'
+          }
+        }
+
+        scm {
+          connection = 'scm:git:git@github.com:romangr/SimpleStateMachine.git'
+          developerConnection = 'scm:git:ssh://github.com:romangr/SimpleStateMachine.git'
+          url = 'https://github.com/romangr/SimpleStateMachine'
+        }
+      }
+
+      from components.java
+    }
+  }
+}
+
+bintray {
+  user = findProperty('bintrayUsername')
+  key = findProperty('bintray_api_key')
+  publications = ['maven']
+  repositories {
+    pkg {
+      repo = 'java-libs'
+      name = 'simple-state-machine'
+      version {
+        name = currentVersion
+        gpg {
+          sign = true
+        }
+      }
+      licenses = ['MIT']
+      vcsUrl = 'https://github.com/romangr/SimpleStateMachine.git'
+    }
+  }
+}
+
+signing {
+  sign publishing.publications.maven
+}
+
+dependencies {
+  compileOnly('com.google.code.findbugs:jsr305:3.0.2')
+
+  testImplementation('org.pitest:pitest-junit5-plugin:0.8')
+  testImplementation('org.assertj:assertj-core:3.10.0')
+  testImplementation('org.junit.jupiter:junit-jupiter:5.4.1')
+  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+}
