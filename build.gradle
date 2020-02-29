@@ -78,7 +78,7 @@ publishing {
 }
 
 bintray {
-  user = findProperty('bintrayUsername')
+  user = findProperty('bintray_username')
   key = findProperty('bintray_api_key')
   publish = true
   publications = ['maven']
