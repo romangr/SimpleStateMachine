@@ -1,4 +1,4 @@
-name: CI
+name: Publish to Bintray
 
 on:
   release:
@@ -19,4 +19,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build and publish
+      env:
+        ORG_GRADLE_PROJECT_bintray_api_key: ${{secrets.bintray_api_key}}
+        ORG_GRADLE_PROJECT_bintrayUsername: ${{secrets.bintrayUsername}}
       run: ./gradlew build bintrayUpload bintrayPublish
