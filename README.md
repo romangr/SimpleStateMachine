@@ -1,0 +1,1 @@
+# SimpleStateMachine ![Build](https://github.com/romangr/SimpleStateMachine/workflows/Build/badge.svg) ![Publish to Bintray](https://github.com/romangr/SimpleStateMachine/workflows/Publish%20to%20Bintray/badge.svg?branch=master&event=release)
