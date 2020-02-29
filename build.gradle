@@ -80,6 +80,7 @@ publishing {
 bintray {
   user = findProperty('bintrayUsername')
   key = findProperty('bintray_api_key')
+  publish = true
   publications = ['maven']
   repositories {
     pkg {
