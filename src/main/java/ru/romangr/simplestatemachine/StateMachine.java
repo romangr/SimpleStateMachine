@@ -4,6 +4,13 @@ import java.util.Collections;
 import java.util.Map;
 import ru.romangr.simplestatemachine.nullability.NonNullApi;
 
+/**
+ * This is a simple implementation of state machine.
+ *
+ * All information about transitions is stored in-memory.
+ *
+ * The implementation is not thread safe.
+ */
 @NonNullApi
 public class StateMachine<S extends Enum<S>, E extends Enum<E>> {
 
@@ -15,12 +22,18 @@ public class StateMachine<S extends Enum<S>, E extends Enum<E>> {
     this(initialState, initialState, transitionsByState);
   }
 
-  public StateMachine(S initialState, S currentState, Map<S, Map<E, Transition<S, E>>> transitionsByState) {
+  public StateMachine(S initialState, S currentState,
+      Map<S, Map<E, Transition<S, E>>> transitionsByState) {
     this.currentState = currentState;
     this.initialState = initialState;
     this.transitionsByState = Collections.unmodifiableMap(transitionsByState);
   }
 
+  /**
+   * Passes the event to the state machine. Doesn't throw exceptions.
+   *
+   * @return {@link EventAcceptResult}
+   */
   public final EventAcceptResult<S> acceptEvent(E event) {
     Map<E, Transition<S, E>> transitionsByEvent = transitionsByState.get(currentState);
     if (transitionsByEvent == null) {

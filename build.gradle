@@ -98,6 +98,15 @@ bintray {
   }
 }
 
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+
+tasks.withType(GenerateModuleMetadata) {
+  enabled = false
+}
+
 signing {
   sign publishing.publications.maven
 }
