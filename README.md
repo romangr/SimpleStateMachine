@@ -1,6 +1,25 @@
-# SimpleStateMachine ![Build](https://github.com/romangr/SimpleStateMachine/workflows/Build/badge.svg) ![Publish to Bintray](https://github.com/romangr/SimpleStateMachine/workflows/Publish%20to%20Bintray/badge.svg?branch=master&event=release)
+# SimpleStateMachine ![Build](https://github.com/romangr/SimpleStateMachine/workflows/Build/badge.svg) ![Publish to Bintray](https://github.com/romangr/SimpleStateMachine/workflows/Publish%20to%20Bintray/badge.svg?branch=master&event=release) [ ![Download](https://api.bintray.com/packages/romangr/java-libs/simple-state-machine/images/download.svg?version=0.0.2.1) ](https://bintray.com/romangr/java-libs/simple-state-machine/0.0.2.1/link)
 
 SimpleStateMachine is a small util to build small state machines in Java
+
+## Download
+The library is available on JCenter public repository
+
+### Gradle
+```groovy
+implementation 'ru.romangr:simple-state-machine:0.0.2.1'
+```
+
+### Maven
+```xml
+<dependency>
+	<groupId>ru.romangr</groupId>
+	<artifactId>simple-state-machine</artifactId>
+	<version>0.0.2.1</version>
+	<type>pom</type>
+</dependency>
+```
+
 
 ## Usage
 
