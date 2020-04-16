@@ -2,7 +2,6 @@ package ru.romangr.simplestatemachine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class StateMachineTest {
@@ -149,7 +148,7 @@ class StateMachineTest {
 
   @Test
   void restoreFromMapWithCurrentStateNotEqualToInitialState() {
-    Map<ThreeStates, Map<TwoEvents, Transition<ThreeStates, TwoEvents>>> transitionsMap =
+    StateMachineConfiguration<ThreeStates, TwoEvents> stateMachineConfiguration =
         StateMachine.<ThreeStates, TwoEvents>builder()
             .withStates(ThreeStates.class)
             .withEvents(TwoEvents.class)
@@ -158,10 +157,10 @@ class StateMachineTest {
             .withTransition(ThreeStates.TWO, ThreeStates.ONE, TwoEvents.DOWN)
             .withTransition(ThreeStates.TWO, ThreeStates.THREE, TwoEvents.UP)
             .withTransition(ThreeStates.THREE, ThreeStates.TWO, TwoEvents.DOWN)
-            .asTransitionsMap();
+            .asStateMachineConfiguration();
 
-    StateMachine<ThreeStates, TwoEvents> stateMachine = new StateMachine<>(
-        ThreeStates.ONE, ThreeStates.TWO, transitionsMap);
+    StateMachine<ThreeStates, TwoEvents> stateMachine
+        = StateMachine.fromState(stateMachineConfiguration, ThreeStates.TWO);
 
     assertThat(stateMachine.currentState()).isEqualTo(ThreeStates.TWO);
   }

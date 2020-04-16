@@ -3,7 +3,6 @@ package ru.romangr.simplestatemachine;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -56,15 +55,15 @@ public final class StateMachineBuilder<S extends Enum<S>, E extends Enum<E>> imp
 
   @Override
   public StateMachine<S, E> build() {
-    requireNonNull(states);
-    requireNonNull(events);
-    requireNonNull(initialState);
-    return new StateMachine<>(initialState, collectTransitionsMap());
+    return StateMachine.fromInitialState(asStateMachineConfiguration());
   }
 
   @Override
-  public Map<S, Map<E, Transition<S, E>>> asTransitionsMap() {
-    return Collections.unmodifiableMap(collectTransitionsMap());
+  public StateMachineConfiguration<S, E> asStateMachineConfiguration() {
+    requireNonNull(states);
+    requireNonNull(events);
+    requireNonNull(initialState);
+    return new StateMachineConfiguration<>(collectTransitionsMap(), initialState);
   }
 
   private Map<S, Map<E, Transition<S, E>>> collectTransitionsMap() {
