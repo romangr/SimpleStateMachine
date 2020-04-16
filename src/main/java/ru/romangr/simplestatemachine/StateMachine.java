@@ -1,6 +1,5 @@
 package ru.romangr.simplestatemachine;
 
-import java.util.Collections;
 import java.util.Map;
 import ru.romangr.simplestatemachine.nullability.NonNullApi;
 
@@ -14,28 +13,34 @@ import ru.romangr.simplestatemachine.nullability.NonNullApi;
 @NonNullApi
 public class StateMachine<S extends Enum<S>, E extends Enum<E>> {
 
-  private final S initialState;
-  private Map<S, Map<E, Transition<S, E>>> transitionsByState;
+  private final StateMachineConfiguration<S, E> configuration;
   private S currentState;
 
-  public StateMachine(S initialState, Map<S, Map<E, Transition<S, E>>> transitionsByState) {
-    this(initialState, initialState, transitionsByState);
+  private StateMachine(StateMachineConfiguration<S, E> configuration, S currentState) {
+    this.currentState = currentState;
+    this.configuration = configuration;
   }
 
-  public StateMachine(S initialState, S currentState,
-      Map<S, Map<E, Transition<S, E>>> transitionsByState) {
-    this.currentState = currentState;
-    this.initialState = initialState;
-    this.transitionsByState = Collections.unmodifiableMap(transitionsByState);
+  public static <S extends Enum<S>, E extends Enum<E>> StateMachine<S, E> fromInitialState(
+      StateMachineConfiguration<S, E> configuration
+  ) {
+    return new StateMachine<>(configuration, configuration.getInitialState());
+  }
+
+  public static <S extends Enum<S>, E extends Enum<E>> StateMachine<S, E> fromState(
+      StateMachineConfiguration<S, E> configuration, S currentState
+  ) {
+    return new StateMachine<>(configuration, currentState);
   }
 
   /**
    * Passes the event to the state machine. Doesn't throw exceptions.
    *
+   * @param event to accept.
    * @return {@link EventAcceptResult}
    */
   public final EventAcceptResult<S> acceptEvent(E event) {
-    Map<E, Transition<S, E>> transitionsByEvent = transitionsByState.get(currentState);
+    Map<E, Transition<S, E>> transitionsByEvent = configuration.transitionsByState.get(currentState);
     if (transitionsByEvent == null) {
       return acceptResultForUnexpectedEvent();
     }
@@ -52,7 +57,7 @@ public class StateMachine<S extends Enum<S>, E extends Enum<E>> {
   }
 
   public final void reset() {
-    this.currentState = initialState;
+    this.currentState = configuration.initialState;
   }
 
   public static <S extends Enum<S>, E extends Enum<E>> StatesAwareBuilder<S, E> builder() {
