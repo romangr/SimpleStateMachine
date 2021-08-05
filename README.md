@@ -1,4 +1,4 @@
-# SimpleStateMachine ![Build](https://github.com/romangr/SimpleStateMachine/workflows/Build/badge.svg) ![Publish to Bintray](https://github.com/romangr/SimpleStateMachine/workflows/Publish%20to%20Bintray/badge.svg?branch=master&event=release) [ ![Download](https://api.bintray.com/packages/romangr/java-libs/simple-state-machine/images/download.svg?version=0.0.3) ](https://bintray.com/romangr/java-libs/simple-state-machine/0.0.3/link)
+# SimpleStateMachine ![Build](https://github.com/romangr/SimpleStateMachine/workflows/Build/badge.svg) ![Publish to Packages](https://github.com/romangr/SimpleStateMachine/workflows/Publish%20to%20Packages/badge.svg?branch=master&event=release) 
 
 SimpleStateMachine is a small util to build small state machines in Java
 
