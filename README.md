@@ -1,4 +1,4 @@
-# SimpleStateMachine ![Build](https://github.com/romangr/SimpleStateMachine/workflows/Build/badge.svg) ![Publish to Packages](https://github.com/romangr/SimpleStateMachine/workflows/Publish%20to%20Packages/badge.svg?branch=master&event=release) 
+# SimpleStateMachine ![Build](https://github.com/romangr/SimpleStateMachine/workflows/Build/badge.svg) [![Publish to Packages](https://github.com/romangr/SimpleStateMachine/actions/workflows/publish.yml/badge.svg)](https://github.com/romangr/SimpleStateMachine/actions/workflows/publish.yml)
 
 SimpleStateMachine is a small util to build small state machines in Java
 
