@@ -4,11 +4,10 @@ plugins {
   id 'info.solidsoft.pitest' version '1.4.6'
   id 'maven-publish'
   id 'signing'
-  id "com.jfrog.bintray" version '1.8.4'
 }
 
 ext {
-  currentVersion = '0.0.3'
+  currentVersion = '0.0.4'
 }
 
 group 'ru.romangr'
@@ -41,6 +40,19 @@ pitest {
 }
 
 publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/romangr/SimpleStateMachine")
+      version {
+        name = currentVersion
+      }
+      credentials {
+        username = project.findProperty("github_username")
+        password = project.findProperty("github_token")
+      }
+    }
+  }
   publications {
     maven(MavenPublication) {
       artifactId 'simple-state-machine'
@@ -77,27 +89,6 @@ publishing {
   }
 }
 
-bintray {
-  user = findProperty('bintray_username')
-  key = findProperty('bintray_api_key')
-  publish = true
-  publications = ['maven']
-  repositories {
-    pkg {
-      repo = 'java-libs'
-      name = 'simple-state-machine'
-      version {
-        name = currentVersion
-        gpg {
-          sign = true
-        }
-      }
-      licenses = ['MIT']
-      vcsUrl = 'https://github.com/romangr/SimpleStateMachine.git'
-    }
-  }
-}
-
 java {
   withJavadocJar()
   withSourcesJar()
@@ -105,10 +96,6 @@ java {
 
 tasks.withType(GenerateModuleMetadata) {
   enabled = false
-}
-
-signing {
-  sign publishing.publications.maven
 }
 
 dependencies {
