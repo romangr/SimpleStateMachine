@@ -18,14 +18,8 @@ jobs:
         java-version: 1.8
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Grant execute permission for decrypt_propeties.sh
-      run: chmod +x ./.github/scripts/decrypt_propeties.sh
-    - name: Decrypt properties
-      env:
-        DECRYPT_KEY: ${{secrets.decrypt_key}}
-      run: ./.github/scripts/decrypt_propeties.sh
     - name: Build and publish
       env:
-        ORG_GRADLE_PROJECT_bintray_api_key: ${{secrets.bintray_api_key}}
-        ORG_GRADLE_PROJECT_bintray_username: ${{secrets.bintray_username}}
-      run: ./gradlew build bintrayUpload bintrayPublish
+        ORG_GRADLE_PROJECT_github_username: ${{github.actor}}
+        ORG_GRADLE_PROJECT_github_token: ${{secrets.GITHUB_TOKEN}}
+      run: ./gradlew build publish
