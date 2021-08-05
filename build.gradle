@@ -44,9 +44,7 @@ publishing {
     maven {
       name = "GitHubPackages"
       url = uri("https://maven.pkg.github.com/romangr/SimpleStateMachine")
-      version {
-        name = currentVersion
-      }
+      version = currentVersion
       credentials {
         username = project.findProperty("github_username")
         password = project.findProperty("github_token")
@@ -60,7 +58,7 @@ publishing {
         name = "${group}:${artifactId}"
         description = 'SimpleStateMachine is a small util to build small state machines in Java'
         url = 'https://github.com/romangr/SimpleStateMachine'
-
+        version = currentVersion
         licenses {
           license {
             name = 'MIT License'
